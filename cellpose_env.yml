@@ -1,0 +1,10 @@
+name: cellpose
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - numpy
+  - matplotlib
+  - ipykernel
+  - pandas
+prefix: /Users/ursic/opt/anaconda3/envs/cellpose
