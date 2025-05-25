@@ -3,6 +3,7 @@ from cellpose.io import imread
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import yaml
 
 def analyze_single_img(img: np.ndarray, model, diameter: int, flow_thresh: float, cellprobe_thresh: float, niter: int, file_dir: str, filename: str) -> None:
     # segment an image with the following parameters
@@ -11,31 +12,28 @@ def analyze_single_img(img: np.ndarray, model, diameter: int, flow_thresh: float
     # save masks as a _seg.npy file
     np.save(file_dir + filename + '_seg.npy', mask)
 
+
 def main():
-    for p in range(1, 10):
-        file_dir = f"Z:\\Gladfelter_rotation\\Michael_Ursa\\20240620_NaCl-gradient_24hr\\0_data\\s01_overnight_C_5NaCl_10NaCl_P{p}\\"
-        res_dir = f"Z:\\Gladfelter_rotation\\Michael_Ursa\\20240620_NaCl-gradient_24hr\\1_measurements\\s01_overnight_C_5NaCl_10NaCl_P{p}\\"
+    with open('./config.yml', 'r') as f:
+        config = yaml.safe_load(f)
 
-        if not os.path.exists(res_dir):
-            os.mkdir(res_dir)
-        
+    res_dir = config['mask_dir']
+    file_dir = config['data_dir']
 
-        # model_type='cyto' or model_type='nuclei'
-        model = models.Cellpose(gpu=True, model_type='cyto3')
+    if not os.path.exists(res_dir):
+        os.mkdir(res_dir)
+    
 
-        files = [file for file in os.listdir(file_dir) if (not file.startswith('x') and file.endswith('.tif'))]
-        filenames = [file[:-4] for file in files if (not file.startswith('x') and file.endswith('.tif'))]
-        imgs = [imread(file_dir + file) for file in files]
+    # model_type='cyto' or model_type='nuclei'
+    model = models.Cellpose(gpu=True, model_type='cyto3')
 
+    files = [file for file in os.listdir(file_dir) if (not file.startswith('x') and file.endswith('.tif'))]
+    filenames = [file[:-4] for file in files if (not file.startswith('x') and file.endswith('.tif'))]
+    imgs = [imread(file_dir + file) for file in files]
 
-        diameter = 100 # px
-        flow_thresh = 1
-        cellprobe_thresh = -2.5
-        niter = 2000
-
-        for i in range(len(files)):
-            print(i)
-            analyze_single_img(imgs[i], model, diameter, flow_thresh, cellprobe_thresh, niter, res_dir, filenames[i])
+    for i in range(len(files)):
+        print(i)
+        analyze_single_img(imgs[i], model, config['diameter'], config['flow_thresh'], config['cellprobe_thresh'], config['niter'], res_dir, filenames[i])
 
 
 if __name__ == "__main__":

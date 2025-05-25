@@ -1,0 +1,8 @@
+data_dir: ''
+mask_dir: ''
+result_dir: '' 
+
+diameter: 100 # px
+flow_thresh: 1
+cellprobe_thresh: -2.5
+niter: 2000
