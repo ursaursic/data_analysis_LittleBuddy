@@ -32,7 +32,17 @@ conda activate cellpose
 
 ### Cellpose
 Make sure to install cellpose. Follow the installation guide here: https://cellpose.readthedocs.io/en/latest/installation.html
+```
+pip install cellpose
+pip install 'cellpose[gui]'
+```
 
+To test if the installation worked, open the Cellpose window:
+```
+python -m cellpose
+```
+
+It takes a bit of time to open Cellpose on a computer without GPU. 
 ---
 
 ## Data format
@@ -69,4 +79,5 @@ and the mask analysis script:
 python C_morphology_description.py
 ```
 
+It is quite normal to take a long time, especially if the niter parameter for cellpose is large. It is a lot faster if the GPU is avaliable. 
 
