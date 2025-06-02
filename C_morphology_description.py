@@ -35,34 +35,22 @@ def main():
 
         # Import the .npy file (the original image + segmentation)
         im_seg_path = os.path.join(mask_dir, f"{basename}_seg.npy")
-        im_lab = np.load(im_seg_path, allow_pickle=True) # this imports as a dictionary
-        masks.append(im_lab)
+        im_mask = np.load(im_seg_path, allow_pickle=True) # this imports as a dictionary
+        masks.append(im_mask)
 
 
     df_all = pd.DataFrame()
 
-    for (basename, im, im_lab) in zip(basenames, imgs, masks):
+    for im_mask in masks:
         # Save mask mophology parapeters into a data frame for all labels
-        df = pd.DataFrame(regionprops_table(im_lab, properties=('label','area', 'axis_major_length', 'axis_minor_length', 'centroid', 'orientation')))
+        df = pd.DataFrame(regionprops_table(im_mask, properties=('label','area', 'axis_major_length', 'axis_minor_length', 'centroid', 'orientation')))
         df['image'] = basename
-        df['mutant'] = basename.split('_')[1]
         df['aspect_ratio'] = df['axis_minor_length']/df['axis_major_length']
         df_all = pd.concat((df_all, df))
-
-        # Grab the labels image and store it as an array, plot
-        fig, axs = plt.subplots(1,2, figsize=(12,6))
-        axs[0].imshow(im_lab)
-        axs[0].set_title("labels")
-        axs[1].imshow(im)
-        axs[1].imshow(im_lab, alpha=0.5)
-        axs[1].set_title("overlay")
-        fig.suptitle(f'{basename}')
-        fig.savefig(mask_dir + f"{basename}_seg.png")
-        fig.clf()
-
     
     df_all.to_csv(result_dir + 'morphology_params.csv')
 
 
 if __name__ == "__main__":
     main()
+    print("Morphology analysis completed successfully.")

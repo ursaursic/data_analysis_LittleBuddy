@@ -1,6 +1,6 @@
-data_dir: ''
-mask_dir: ''
-result_dir: '' 
+data_dir: './data_dir/'
+mask_dir: './mask_dir/'
+result_dir: './result_dir/' 
 
 diameter: 100 # px
 flow_thresh: 1

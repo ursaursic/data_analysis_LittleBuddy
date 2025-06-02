@@ -8,4 +8,6 @@ dependencies:
   - ipykernel
   - pandas
   - pyyaml
+  - imageio
+  - scikit-image
 prefix: /Users/ursic/opt/anaconda3/envs/cellpose
